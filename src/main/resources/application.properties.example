@@ -1,0 +1,14 @@
+spring.application.name=authify
+
+spring.datasource.url=
+spring.datasource.username=
+spring.datasource.password=
+
+frontend.url=
+
+jwt.secret.key=
+
+spring.mail.host=smtp-relay.brevo.com
+spring.mail.port=587
+spring.mail.username=
+spring.mail.password=
