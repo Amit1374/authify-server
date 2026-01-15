@@ -31,52 +31,65 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain)
+            throws ServletException, IOException {
 
         String path = request.getServletPath();
-        if (PUBLIC_URLS.contains(path)){
+        if (PUBLIC_URLS.contains(path)) {
             filterChain.doFilter(request, response);
             return;
-
         }
+
         String jwt = null;
         String email = null;
-        //1 check the authorization header
-        final  String authorizationHeader = request.getHeader("Authorization");
-        if (authorizationHeader!= null && authorizationHeader.startsWith("Bearer ")){
+
+        // 1. Check Authorization header
+        final String authorizationHeader = request.getHeader("Authorization");
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             jwt = authorizationHeader.substring(7);
         }
 
-        //2. if not found in header, check the cookie
-
-        if (jwt== null){
-            Cookie [] cookies= request.getCookies();
-            if (cookies!= null) {
-                for (Cookie cookie: cookies){
-                    if ("jwt".equals(cookie.getName())){
-                        jwt =  cookie.getValue();
+        // 2. Check cookie
+        if (jwt == null) {
+            Cookie[] cookies = request.getCookies();
+            if (cookies != null) {
+                for (Cookie cookie : cookies) {
+                    if ("jwt".equals(cookie.getName())) {
+                        jwt = cookie.getValue();
                         break;
                     }
                 }
             }
         }
 
-        //3. validate the token and set the security context
+        // 3. Validate token
+        if (jwt != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            try {
+                email = jwtUtil.extractEmail(jwt);
 
-        if (jwt != null){
+                UserDetails userDetails =
+                        appUserDetailsService.loadUserByUsername(email);
 
-            email = jwtUtil.extractEmail(jwt);
-            if (email != null && SecurityContextHolder.getContext().getAuthentication() == null){
-              UserDetails  userDetails = appUserDetailsService.loadUserByUsername(email);
-              if (jwtUtil.validateToken(jwt, userDetails)){
-                  UsernamePasswordAuthenticationToken authenticationToken =
-                          new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                  authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                  SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                if (jwtUtil.validateToken(jwt, userDetails)) {
+                    UsernamePasswordAuthenticationToken authenticationToken =
+                            new UsernamePasswordAuthenticationToken(
+                                    userDetails, null, userDetails.getAuthorities());
 
-              }
+                    authenticationToken.setDetails(
+                            new WebAuthenticationDetailsSource().buildDetails(request));
+
+                    SecurityContextHolder.getContext()
+                            .setAuthentication(authenticationToken);
+                }
+
+            } catch (Exception e) {
+                // Invalid or expired token → ignore & continue filter chain
+                SecurityContextHolder.clearContext();
             }
         }
+
         filterChain.doFilter(request, response);
     }
 }
