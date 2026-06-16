@@ -367,8 +367,46 @@ The backend is deployed on Render and can be connected with any frontend applica
 
 ## 👨‍💻 Author
 
-Amit Vishwakarma
+### Amit Vishwakarma
 
-- B.Tech Computer Engineering Student
-- Full-Stack Developer
-- Passionate about Backend Development, System Design, and Secure Web Applications
+**Connect with me:**
+
+* GitHub: https://github.com/Amit1374
+* LinkedIn: https://www.linkedin.com/in/amit-vishwakarma-7154b8331
+* Portfolio: https://amit-vishwakarma.vercel.app/
+* Email: amitvishwakarma0137@gmail.com
+
+---
+
+## ⭐ Support
+
+If you found this project helpful, please consider:
+
+* Giving this repository a ⭐ on GitHub
+* Sharing it with fellow developers
+* Reporting bugs or issues
+* Suggesting improvements or new features
+
+Your feedback and support are greatly appreciated and help improve the project.
+
+---
+
+## 📬 Contact
+
+Feel free to reach out for:
+
+* Project discussions
+* Collaboration opportunities
+* Open-source contributions
+* Backend Development
+* Full-Stack Development
+* Software Engineering opportunities
+
+I'm always happy to connect with fellow developers and discuss technology, software architecture, and innovative projects.
+
+---
+
+### ⭐ If you like this project, don't forget to star the repository!
+
+
+
